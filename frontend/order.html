@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Place Order</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<h2 style="text-align:center;">Valentine’s Day Flower Order ❤️</h2>
+
+<form id="orderForm">
+  <input placeholder="Sender Name" required>
+  <input placeholder="Receiver Name" required>
+  <input placeholder="Delivery Address" required>
+  <select>
+    <option>Red Roses</option>
+    <option>White Roses</option>
+    <option>Pink Roses</option>
+    <option>Tulips</option>
+    <option>Orchids</option>
+    <option>Lilies</option>
+    <option>Peonies</option>
+    <option>Daisies</option>
+  </select>
+  <textarea placeholder="Message for your loved one"></textarea>
+  <input value="14 February" disabled>
+  <input value="Cash on Delivery" disabled>
+
+  <button type="submit">Confirm Order</button>
+</form>
+
+<script>
+document.getElementById("orderForm").onsubmit = function(e){
+  e.preventDefault();
+  alert("Your Valentine’s Day flower order is confirmed ❤️");
+}
+</script>
+
+</body>
+</html>
+
