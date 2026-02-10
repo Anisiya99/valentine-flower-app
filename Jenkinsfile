@@ -3,47 +3,53 @@ pipeline {
 
     stages {
 
-        stage('SOURCE') {
+        stage('Source') {
             steps {
-                git branch: 'main',
-                    url: 'https://github.com/Anisiya99/valentine-flower-app.git'
+                git 'https://github.com/Anisiya99/valentine-flower-app.git'
             }
         }
 
-        stage('BUILD') {
+        stage('Build') {
             steps {
-                sh 'mvn clean compile -f backend/pom.xml'
+                sh 'cd backend && mvn clean compile'
             }
         }
 
-        stage('TEST') {
+        stage('Test') {
             steps {
-                sh 'mvn test -f backend/pom.xml'
+                sh 'cd backend && mvn test'
             }
         }
 
-        stage('PACKAGE') {
+        stage('Package') {
             steps {
-                sh 'mvn package -f backend/pom.xml'
-                sh 'docker build -t yourname/valentine-flowers:1.0 .'
+                sh 'cd backend && mvn package -DskipTests'
             }
         }
 
-        stage('DEPLOY') {
+        stage('Docker Build & Push') {
             steps {
-                sh 'kubectl apply -f k8s/deployment.yaml'
-                sh 'kubectl apply -f k8s/service.yaml'
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                    docker login -u $DOCKER_USER -p $DOCKER_PASS
+                    docker build -t $DOCKER_USER/valentine-flower-app:latest .
+                    docker push $DOCKER_USER/valentine-flower-app:latest
+                    '''
+                }
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully 🚀'
+            echo "Pipeline completed successfully 🎉"
         }
         failure {
-            echo 'Pipeline failed ❌'
+            echo "Pipeline failed ❌"
         }
     }
 }
-
