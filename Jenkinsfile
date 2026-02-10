@@ -3,12 +3,6 @@ pipeline {
 
     stages {
 
-        stage('Source') {
-            steps {
-                git 'https://github.com/Anisiya99/valentine-flower-app.git'
-            }
-        }
-
         stage('Build') {
             steps {
                 sh 'cd backend && mvn clean compile'
